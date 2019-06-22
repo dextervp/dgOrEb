@@ -4,30 +4,44 @@ import logging
 
 def getDgEbFlag():
     print 'one'
-    conn = sqlite3.connect('db/dgOrEbDatabase.db')
-    cur = conn.cursor()
-    # print 'con ' + conn
-    cur.execute('select dgEbFlag from dgEbFlagTable order by create_tmstp desc limit 1')
+    try:
+        conn = sqlite3.connect('db/dgOrEbDatabase.db')
+        cur = conn.cursor()
+        # print 'con ' + conn
+        cur.execute('select dgEbFlag from dgEbFlagTable order by create_tmstp desc limit 1')
+        dgEbFlag = cur.fetchone()[0]
+    except sqlite3.Error as e:
+        logging.error("DB error : %s" %e)
+    except Exception as e:
+        logging.error("exception in query : %s" %e)
+    finally:
+        if conn:
+            conn.close()
 
-    dgEbFlag = cur.fetchone()[0]
-
-    conn.close()
-    logging.info('******')
+ 
+    # conn.close()
+    # logging.info('******')
     logging.info('dgorEB   ' + str(dgEbFlag))
     return dgEbFlag.encode('utf8')
 
 
 def storeDgEbFlag(dgEbFlag):
-    conn = sqlite3.connect('db/dgOrEbDatabase.db')
-    cur = conn.cursor()
-    currDate = str(datetime.datetime.now())
-
-    cur.execute('insert into dgEbFlagTable values (?,?)', [dgEbFlag,currDate])
-
-
+    try:
+        conn = sqlite3.connect('db/dgOrEbDatabase.db')
+        cur = conn.cursor()
+        currDate = str(datetime.datetime.now())
+        data = cur.execute('insert into dgEbFlagTable values (?,?)', [dgEbFlag,currDate])
+        conn.commit()
+    except sqlite3.error as e:
+        logging.error("db error as : %s" %e)
+    except Exception as e:
+        logging.error('exception as : %s' %e)
+    finally:
+        if conn:
+            conn.close()
     # dgEbFlag =str(cur.fetchone())
-    conn.commit()
-    conn.close()
+    # conn.commit()
+    # conn.close()
     logging.info('flag inserted ' + str(dgEbFlag) + '  curr date ' + str(currDate))
 
 def main():
