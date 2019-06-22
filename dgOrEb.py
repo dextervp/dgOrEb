@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import logging
 
 def getDgEbFlag():
     print 'one'
@@ -11,8 +12,8 @@ def getDgEbFlag():
     dgEbFlag = cur.fetchone()[0]
 
     conn.close()
-    print '******'
-    print dgEbFlag
+    logging.info('******')
+    logging.info('dgorEB   ' + str(dgEbFlag))
     return dgEbFlag.encode('utf8')
 
 
@@ -23,12 +24,14 @@ def storeDgEbFlag(dgEbFlag):
 
     cur.execute('insert into dgEbFlagTable values (?,?)', [dgEbFlag,currDate])
 
+
     # dgEbFlag =str(cur.fetchone())
     conn.commit()
     conn.close()
-
+    logging.info('flag inserted ' + str(dgEbFlag) + '  curr date ' + str(currDate))
 
 def main():
+    logging.basicConfig(filename='log_dgOrEB.log',level=logging.DEBUG)
     dgEbFlag = getDgEbFlag()
     print 'flag ' + dgEbFlag
     if dgEbFlag == 'EB':
@@ -37,6 +40,8 @@ def main():
         dgEbFlag = 'EB'
 
     storeDgEbFlag(dgEbFlag)
+
+    return None
 
 
 if __name__ == '__main__':
