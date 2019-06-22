@@ -4,7 +4,7 @@ import logging
 
 def getDgEbFlag():
     print 'one'
-    conn = sqlite3.connect('db/dgOrEBDatabase.db')
+    conn = sqlite3.connect('db/dgOrEbDatabase.db')
     cur = conn.cursor()
     # print 'con ' + conn
     cur.execute('select dgEbFlag from dgEbFlagTable order by create_tmstp desc limit 1')
@@ -18,7 +18,7 @@ def getDgEbFlag():
 
 
 def storeDgEbFlag(dgEbFlag):
-    conn = sqlite3.connect('db/dgOrEBDatabase.db')
+    conn = sqlite3.connect('db/dgOrEbDatabase.db')
     cur = conn.cursor()
     currDate = str(datetime.datetime.now())
 
